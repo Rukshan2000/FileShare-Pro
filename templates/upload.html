@@ -5,6 +5,18 @@
     <h1><i class="fas fa-cloud-upload-alt"></i> Upload Files</h1>
     <p>Drag and drop files or click to select. Maximum file size: 100MB</p>
     
+    <!-- Folder Path Input -->
+    <div class="folder-input-container">
+        <h3><i class="fas fa-folder"></i> Upload to Folder</h3>
+        <div class="folder-input-group">
+            <input type="text" id="folderPath" placeholder="Enter folder path (e.g., documents/2024, projects/web-app)" class="folder-input">
+            <button class="btn btn-secondary" onclick="createFolder()">
+                <i class="fas fa-plus"></i> Create Folder
+            </button>
+        </div>
+        <p class="folder-help">Leave empty to upload to root directory. Use '/' to separate folders.</p>
+    </div>
+    
     <div id="uploadArea" class="upload-area">
         <i class="fas fa-cloud-upload-alt upload-icon"></i>
         <h3>Drag & Drop Files Here</h3>
@@ -32,6 +44,7 @@
         <div class="progress-bar">
             <div class="progress" id="progressBar"></div>
         </div>
+        <p id="uploadStatus"></p>
     </div>
 </div>
 

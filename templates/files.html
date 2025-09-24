@@ -6,14 +6,25 @@
         <h1><i class="fas fa-folder-open"></i> File Library</h1>
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search files...">
+            <input type="text" id="searchInput" placeholder="Search files and folders...">
         </div>
+    </div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-container">
+        <nav class="breadcrumb" id="breadcrumb">
+            <a href="#" onclick="navigateToFolder('')"><i class="fas fa-home"></i> Root</a>
+        </nav>
     </div>
     
     <div class="files-stats">
         <div class="stat-item">
             <i class="fas fa-file"></i>
             <span id="fileCount">0</span> Files
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-folder"></i>
+            <span id="folderCount">0</span> Folders
         </div>
         <div class="stat-item">
             <i class="fas fa-database"></i>
@@ -25,11 +36,12 @@
         <table class="files-table">
             <thead>
                 <tr>
-                    <th><i class="fas fa-file"></i> File Name</th>
+                    <th><i class="fas fa-file"></i> Name</th>
+                    <th><i class="fas fa-folder"></i> Type</th>
                     <th><i class="fas fa-weight"></i> Size</th>
                     <th><i class="fas fa-calendar"></i> Upload Date</th>
                     <th><i class="fas fa-download"></i> Downloads</th>
-                    <th><i class="fas fa-fingerprint"></i> MD5 Hash</th>
+                    <th><i class="fas fa-link"></i> URLs</th>
                     <th><i class="fas fa-cogs"></i> Actions</th>
                 </tr>
             </thead>
@@ -55,6 +67,164 @@
         <a href="/upload" class="btn btn-primary">
             <i class="fas fa-plus"></i> Upload New File
         </a>
+    </div>
+</div>
+
+<!-- URL Display Modal -->
+<div id="urlModal" class="modal" style="display: none;">
+    <div class="modal-content url-modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-link"></i> File URLs</h3>
+            <button class="close-btn" onclick="closeUrlModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="file-info">
+                <h4 id="urlFileName">filename.jpg</h4>
+                <p id="urlFileInfo">Size: 2.5 MB | Type: image/jpeg</p>
+            </div>
+            
+            <div class="url-section">
+                <h5><i class="fas fa-eye"></i> Preview URL</h5>
+                <p class="url-description">View file directly in browser (for images, PDFs, etc.)</p>
+                <div class="url-container">
+                    <input type="text" id="previewUrl" readonly>
+                    <button class="btn btn-secondary" onclick="copyUrl('previewUrl')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-primary" onclick="openUrl('previewUrl')">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </button>
+                </div>
+            </div>
+
+            <div class="url-section">
+                <h5><i class="fas fa-link"></i> Direct URL</h5>
+                <p class="url-description">Direct file access (like S3/CDN URL)</p>
+                <div class="url-container">
+                    <input type="text" id="directUrl" readonly>
+                    <button class="btn btn-secondary" onclick="copyUrl('directUrl')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-primary" onclick="openUrl('directUrl')">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </button>
+                </div>
+            </div>
+
+            <div class="url-section">
+                <h5><i class="fas fa-download"></i> Download URL</h5>
+                <p class="url-description">Forces file download with attachment header</p>
+                <div class="url-container">
+                    <input type="text" id="downloadUrl" readonly>
+                    <button class="btn btn-secondary" onclick="copyUrl('downloadUrl')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-success" onclick="openUrl('downloadUrl')">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+
+            <div class="url-section" id="thumbnailSection" style="display: none;">
+                <h5><i class="fas fa-image"></i> Thumbnail URL</h5>
+                <p class="url-description">300x300px JPEG thumbnail (for images only)</p>
+                <div class="url-container">
+                    <input type="text" id="thumbnailUrl" readonly>
+                    <button class="btn btn-secondary" onclick="copyUrl('thumbnailUrl')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-primary" onclick="openUrl('thumbnailUrl')">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </button>
+                </div>
+            </div>
+
+            <div class="url-actions">
+                <button class="btn btn-info" onclick="copyAllUrls()">
+                    <i class="fas fa-copy"></i> Copy All URLs
+                </button>
+                <button class="btn btn-warning" onclick="generateNewShareLink()">
+                    <i class="fas fa-refresh"></i> Generate New Links
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeUrlModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Share Link Modal -->
+<div id="shareLinkModal" class="modal" style="display: none;">
+    <div class="modal-content share-modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-share-alt"></i> Share File</h3>
+            <button class="close-btn" onclick="closeShareLinkModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="file-info">
+                <h4 id="shareFileName">filename.jpg</h4>
+                <p id="shareFileInfo">Click a share type to generate a link</p>
+            </div>
+            
+            <div class="share-options">
+                <div class="option-group">
+                    <label>Expires in (days):</label>
+                    <input type="number" id="expiryDays" value="7" min="1" max="365">
+                </div>
+                <div class="option-group">
+                    <label>Maximum downloads (optional):</label>
+                    <input type="number" id="maxDownloads" placeholder="Unlimited" min="1">
+                </div>
+            </div>
+
+            <div class="share-type-buttons">
+                <h5><i class="fas fa-link"></i> Choose Share Type:</h5>
+                <div class="share-button-grid">
+                    <button class="share-type-btn preview-btn" onclick="generateShareLinkType('preview')">
+                        <i class="fas fa-eye"></i>
+                        <span>Preview Link</span>
+                        <small>View in browser</small>
+                    </button>
+                    <button class="share-type-btn direct-btn" onclick="generateShareLinkType('direct')">
+                        <i class="fas fa-link"></i>
+                        <span>Direct Link</span>
+                        <small>S3-like URL</small>
+                    </button>
+                    <button class="share-type-btn download-btn" onclick="generateShareLinkType('download')">
+                        <i class="fas fa-download"></i>
+                        <span>Download Link</span>
+                        <small>Force download</small>
+                    </button>
+                    <button class="share-type-btn thumbnail-btn" onclick="generateShareLinkType('thumbnail')" id="thumbnailShareBtn" style="display: none;">
+                        <i class="fas fa-image"></i>
+                        <span>Thumbnail Link</span>
+                        <small>300x300px image</small>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="shareResult" class="share-result" style="display: none;">
+                <div class="share-result-header">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="shareTypeLabel">Preview Link</span>
+                    <span>Generated Successfully!</span>
+                </div>
+                <div class="link-container">
+                    <input type="text" id="shareLink" readonly>
+                    <button class="btn btn-secondary" onclick="copyShareLink()">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-primary" onclick="openShareLink()">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </button>
+                </div>
+                <p class="expire-info">Link expires: <span id="expiryDate"></span></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeShareLinkModal()">Close</button>
+        </div>
     </div>
 </div>
 

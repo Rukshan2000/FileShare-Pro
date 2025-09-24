@@ -57,7 +57,7 @@ body {
 
 /* Container */
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -247,7 +247,7 @@ body {
 
 /* Files Container */
 .files-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -316,10 +316,12 @@ body {
     border-radius: 15px;
     overflow: hidden;
     margin-bottom: 2rem;
+    overflow-x: auto;
 }
 
 .files-table {
     width: 100%;
+    min-width: 1200px;
     border-collapse: collapse;
 }
 
@@ -1379,5 +1381,694 @@ body {
     
     .upload-info i {
         font-size: 1.5rem;
+    }
+}
+
+/* ========== NEW FOLDER AND SHARE FUNCTIONALITY STYLES ========== */
+
+/* Folder Input Container */
+.folder-input-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.folder-input-container h3 {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+}
+
+.folder-input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.folder-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.folder-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.folder-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.folder-help {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb-container {
+    margin: 1rem 0;
+}
+
+.breadcrumb {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.breadcrumb a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.breadcrumb .fas.fa-chevron-right {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+/* Folder and File Row Styles */
+.folder-row {
+    background: rgba(76, 175, 80, 0.1) !important;
+    border-left: 3px solid #4CAF50;
+}
+
+.folder-row:hover {
+    background: rgba(76, 175, 80, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+.folder-link {
+    color: #4CAF50 !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.folder-link:hover {
+    color: #66BB6A !important;
+    text-decoration: underline;
+}
+
+.file-row {
+    transition: all 0.3s ease;
+}
+
+.file-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+/* Share Link Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.share-options {
+    margin: 1.5rem 0;
+}
+
+.option-group {
+    margin-bottom: 1rem;
+}
+
+.option-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.option-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.option-group input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.share-result {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.share-result label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.link-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.link-container input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.expire-info {
+    margin-top: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Button Styles for Share/Actions */
+.btn.btn-success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border: none;
+    color: #fff;
+}
+
+.btn.btn-success:hover {
+    background: linear-gradient(135deg, #45a049, #4CAF50);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Status indicator for upload progress */
+#uploadStatus {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+/* Responsive Design for New Elements */
+@media (max-width: 768px) {
+    .folder-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .breadcrumb {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .link-container {
+        flex-direction: column;
+    }
+    
+    .files-table th:nth-child(3),
+    .files-table td:nth-child(3),
+    .files-table th:nth-child(4),
+    .files-table td:nth-child(4),
+    .files-table th:nth-child(5),
+    .files-table td:nth-child(5) {
+        display: none;
+    }
+}
+
+/* URL Modal Styles */
+.url-modal {
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.file-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.file-info h4 {
+    color: #4fc3f7;
+    margin-bottom: 0.5rem;
+    word-break: break-all;
+}
+
+.file-info p {
+    color: #e0e0e0;
+    font-size: 0.9rem;
+}
+
+.url-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid #4fc3f7;
+}
+
+.url-section h5 {
+    color: #4fc3f7;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.url-description {
+    color: #b0b0b0;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+.url-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.url-container input[type="text"] {
+    flex: 1;
+    min-width: 300px;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.url-container input[type="text"]:focus {
+    outline: none;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
+}
+
+.url-container .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    min-width: auto;
+}
+
+.url-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.url-actions .btn {
+    padding: 0.75rem 1.5rem;
+}
+
+/* URL button in files table */
+.url-btn {
+    background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+    border: none;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.url-btn:hover {
+    background: linear-gradient(45deg, #29b6f6, #0277bd);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* URL button group layout */
+.url-btn-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-width: 280px;
+}
+
+.url-btn-group .url-btn {
+    flex: 1;
+    min-width: 65px;
+    white-space: nowrap;
+}
+
+/* Copy feedback */
+.copy-feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4caf50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.copy-feedback.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments for URL modal */
+@media (max-width: 768px) {
+    .url-modal {
+        max-width: 95vw;
+        margin: 1rem;
+    }
+    
+    .url-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .url-container input[type="text"] {
+        min-width: auto;
+        margin-bottom: 0.5rem;
+    }
+    
+    .url-actions {
+        flex-direction: column;
+    }
+    
+    .file-info h4 {
+        font-size: 1rem;
+    }
+}
+
+/* ========== SHARE MODAL WITH 4 SHARE TYPES ========== */
+.share-modal {
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.share-type-buttons {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.share-type-buttons h5 {
+    color: #4fc3f7;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.share-button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.share-type-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    min-height: 120px;
+    justify-content: center;
+}
+
+.share-type-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.share-type-btn i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.share-type-btn span {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.share-type-btn small {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+}
+
+/* Individual button colors */
+.preview-btn {
+    border-color: #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.preview-btn:hover {
+    border-color: #1976D2;
+    background: rgba(33, 150, 243, 0.2);
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+}
+
+.preview-btn i {
+    color: #2196F3;
+}
+
+.direct-btn {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.direct-btn:hover {
+    border-color: #388E3C;
+    background: rgba(76, 175, 80, 0.2);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.direct-btn i {
+    color: #4CAF50;
+}
+
+.download-btn {
+    border-color: #FF9800;
+    background: rgba(255, 152, 0, 0.1);
+}
+
+.download-btn:hover {
+    border-color: #F57C00;
+    background: rgba(255, 152, 0, 0.2);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+}
+
+.download-btn i {
+    color: #FF9800;
+}
+
+.thumbnail-btn {
+    border-color: #E91E63;
+    background: rgba(233, 30, 99, 0.1);
+}
+
+.thumbnail-btn:hover {
+    border-color: #C2185B;
+    background: rgba(233, 30, 99, 0.2);
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+}
+
+.thumbnail-btn i {
+    color: #E91E63;
+}
+
+/* Share result styling */
+.share-result {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.share-result-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.share-result-header i {
+    font-size: 1.2rem;
+}
+
+/* Responsive design for share buttons */
+@media (max-width: 768px) {
+    .share-modal {
+        max-width: 95vw;
+        margin: 1rem;
+    }
+    
+    .share-button-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .share-type-btn {
+        padding: 1rem 0.75rem;
+        min-height: 100px;
+    }
+    
+    .share-type-btn i {
+        font-size: 1.5rem;
+    }
+    
+    .share-type-btn span {
+        font-size: 0.9rem;
+    }
+    
+    .share-type-btn small {
+        font-size: 0.75rem;
     }
 }
