@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2><i class="fas fa-comments"></i> Group Chat</h2>
+        <div class="online-users">
+            <i class="fas fa-circle online-indicator"></i>
+            <span id="onlineCount">1</span> online
+        </div>
+    </div>
+    
+    <div class="username-setup" id="usernameSetup">
+        <div class="username-card">
+            <h3><i class="fas fa-user"></i> Enter Your Name</h3>
+            <div class="form-group">
+                <input type="text" id="usernameInput" placeholder="Your display name..." maxlength="20">
+                <button id="joinChatBtn" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Join Chat
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-main" id="chatMain" style="display: none;">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <!-- Typing indicators will appear here -->
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="file-upload-area" id="fileUploadArea" style="display: none;">
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="upload-info" id="uploadInfo">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Drag files here or click to upload</span>
+                </div>
+                <input type="file" id="fileInput" accept="*/*" style="display: none;">
+                <button id="cancelUploadBtn" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+            
+            <div class="chat-input-wrapper">
+                <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
+                <button id="fileBtn" class="btn btn-secondary">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button id="sendBtn" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <button id="emojiBtn" class="btn btn-secondary">
+                    <i class="fas fa-smile"></i>
+                </button>
+            </div>
+            <div class="emoji-picker" id="emojiPicker" style="display: none;">
+                <div class="emoji-grid">
+                    <span class="emoji" data-emoji="😀">😀</span>
+                    <span class="emoji" data-emoji="😂">😂</span>
+                    <span class="emoji" data-emoji="😍">😍</span>
+                    <span class="emoji" data-emoji="🤔">🤔</span>
+                    <span class="emoji" data-emoji="😎">😎</span>
+                    <span class="emoji" data-emoji="😢">😢</span>
+                    <span class="emoji" data-emoji="😡">😡</span>
+                    <span class="emoji" data-emoji="👍">👍</span>
+                    <span class="emoji" data-emoji="👎">👎</span>
+                    <span class="emoji" data-emoji="❤️">❤️</span>
+                    <span class="emoji" data-emoji="🎉">🎉</span>
+                    <span class="emoji" data-emoji="🔥">🔥</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chat-info">
+    <div class="info-card">
+        <h4><i class="fas fa-info-circle"></i> Chat Guidelines</h4>
+        <ul>
+            <li>Be respectful to all users</li>
+            <li>Keep conversations relevant</li>
+            <li>No spam or inappropriate content</li>
+            <li>Messages are temporary and not stored permanently</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

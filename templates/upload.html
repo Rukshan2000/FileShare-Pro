@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="upload-container">
+    <h1><i class="fas fa-cloud-upload-alt"></i> Upload Files</h1>
+    <p>Drag and drop files or click to select. Maximum file size: 100MB</p>
+    
+    <div id="uploadArea" class="upload-area">
+        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+        <h3>Drag & Drop Files Here</h3>
+        <p>or</p>
+        <input type="file" id="fileInput" multiple accept="*" style="display: none;">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-file"></i> Choose Files
+        </button>
+    </div>
+    
+    <div class="upload-info">
+        <h3><i class="fas fa-info-circle"></i> Supported File Types</h3>
+        <div class="file-types">
+            <span class="file-type"><i class="fas fa-file-text"></i> Text (.txt)</span>
+            <span class="file-type"><i class="fas fa-file-pdf"></i> PDF (.pdf)</span>
+            <span class="file-type"><i class="fas fa-file-image"></i> Images (.png, .jpg, .jpeg, .gif)</span>
+            <span class="file-type"><i class="fas fa-file-archive"></i> Archives (.zip)</span>
+            <span class="file-type"><i class="fas fa-file-word"></i> Documents (.doc, .docx)</span>
+            <span class="file-type"><i class="fas fa-file-excel"></i> Spreadsheets (.xls, .xlsx)</span>
+        </div>
+    </div>
+    
+    <div class="upload-progress" id="uploadProgress" style="display: none;">
+        <h3><i class="fas fa-spinner fa-spin"></i> Uploading...</h3>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
+</div>
+
+<div class="recent-activity">
+    <h2><i class="fas fa-history"></i> Upload Activity</h2>
+    <div id="activityLog" class="activity-log"></div>
+</div>
+{% endblock %}
