@@ -1,0 +1,23 @@
+# Development dependencies for FileShare Pro
+# Install with: pip install -r requirements-dev.txt
+
+
+# Security scanning
+bandit==1.7.5
+
+# Code formatting and linting
+black==23.7.0
+flake8==6.0.0
+isort==5.12.0
+
+# Documentation
+mkdocs==1.5.0
+mkdocs-material==9.1.21
+pbr>=6.0.0
+
+# Git hooks
+pre-commit==3.3.3
+
+# Testing
+pytest==7.4.0
+pytest-cov==4.1.0

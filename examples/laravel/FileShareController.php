@@ -152,7 +152,7 @@ class FileShareController extends Controller
 
         // This would call your FileShare Pro API to generate a new link
         // Implementation depends on your specific needs
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Share link generated',

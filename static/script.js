@@ -71,7 +71,7 @@ function addActivity(message) {
         activityItem.className = 'activity-item';
         activityItem.innerHTML = `<i class="fas fa-info-circle"></i> ${new Date().toLocaleString()}: ${message}`;
         activityLog.prepend(activityItem);
-        
+
         // Keep only the last 10 activities
         const activities = activityLog.children;
         if (activities.length > 10) {
@@ -84,14 +84,14 @@ async function updateStats() {
     try {
         const response = await fetch('/api/stats');
         const stats = await response.json();
-        
+
         const totalFilesElem = document.getElementById('totalFiles');
         const totalDownloadsElem = document.getElementById('totalDownloads');
         const totalSizeElem = document.getElementById('totalSize');
         const fileCountElem = document.getElementById('fileCount');
         const folderCountElem = document.getElementById('folderCount');
         const totalSizeDisplayElem = document.getElementById('totalSizeDisplay');
-        
+
         if (totalFilesElem) totalFilesElem.textContent = stats.total_files;
         if (totalDownloadsElem) totalDownloadsElem.textContent = stats.total_downloads;
         if (totalSizeElem) totalSizeElem.textContent = stats.total_size_mb + ' MB';
@@ -124,12 +124,12 @@ async function refreshFiles() {
 function displayFiles(files) {
     const tbody = document.getElementById('filesTableBody');
     const noFiles = document.getElementById('noFiles');
-    
+
     if (!tbody) return;
-    
+
     // Filter files and folders based on current folder
     let currentItems = [];
-    
+
     if (Array.isArray(files)) {
         files.forEach(item => {
             if (item.type === 'folder') {
@@ -142,7 +142,7 @@ function displayFiles(files) {
                 } else {
                     // Inside a folder - show subfolders
                     const folderPrefix = currentFolder + '/';
-                    if (item.path.startsWith(folderPrefix) && 
+                    if (item.path.startsWith(folderPrefix) &&
                         !item.path.substring(folderPrefix.length).includes('/')) {
                         currentItems.push(item);
                     }
@@ -159,7 +159,7 @@ function displayFiles(files) {
             }
         });
     }
-    
+
     if (currentItems.length === 0) {
         tbody.innerHTML = '';
         if (noFiles) {
@@ -175,15 +175,15 @@ function displayFiles(files) {
         }
         return;
     }
-    
+
     if (noFiles) noFiles.style.display = 'none';
-    
+
     tbody.innerHTML = currentItems.map(item => {
         if (item.type === 'folder') {
             return `
                 <tr class="folder-row">
                     <td>
-                        <i class="fas fa-folder" style="color: #4CAF50;"></i> 
+                        <i class="fas fa-folder" style="color: #4CAF50;"></i>
                         <a href="#" onclick="navigateToFolder('${item.path}')" class="folder-link">
                             ${item.name}
                         </a>
@@ -206,11 +206,11 @@ function displayFiles(files) {
             const filePath = item.fullPath || fileName;
             const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(fileName);
             const urls = item.urls || {};
-            
+
             return `
                 <tr class="file-row">
                     <td>
-                        <i class="fas ${isImage ? 'fa-image' : 'fa-file'}"></i> 
+                        <i class="fas ${isImage ? 'fa-image' : 'fa-file'}"></i>
                         <span title="${fileName}">${fileName.length > 40 ? fileName.substring(0, 40) + '...' : fileName}</span>
                         ${currentFolder ? `<br><small class="folder-path">📁 ${currentFolder}</small>` : ''}
                     </td>
@@ -286,7 +286,7 @@ async function downloadFile(filename) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         addActivity(`Download started: ${filename}`);
     } catch (error) {
         console.error('Error downloading file:', error);
@@ -336,36 +336,36 @@ function showUploadModal(totalFiles, largeFiles) {
             </div>
         </div>
     `;
-    
+
     // Add modal to DOM
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
+
     // Return modal element for reference
     return document.getElementById('uploadModal');
 }
 
 function updateUploadModalProgress(modal, current, total, filename) {
     if (!modal) return;
-    
+
     const progressBar = modal.querySelector('#modalProgressBar');
     const currentFileName = modal.querySelector('#currentFileName');
     const fileProgress = modal.querySelector('#fileProgress');
-    
+
     const progress = (current / total) * 100;
-    
+
     if (progressBar) {
         progressBar.style.width = `${progress}%`;
     }
-    
+
     if (currentFileName) {
         const displayName = filename.length > 30 ? filename.substring(0, 30) + '...' : filename;
         currentFileName.textContent = `Uploading: ${displayName}`;
     }
-    
+
     if (fileProgress) {
         fileProgress.textContent = `${current}/${total}`;
     }
-    
+
     // Change button to "Close" when upload is complete
     if (current === total) {
         const cancelBtn = modal.querySelector('#cancelUploadBtn');
@@ -374,7 +374,7 @@ function updateUploadModalProgress(modal, current, total, filename) {
             cancelBtn.onclick = () => hideUploadModal(modal);
             cancelBtn.className = 'btn btn-primary';
         }
-        
+
         if (currentFileName) {
             currentFileName.innerHTML = '<i class="fas fa-check-circle"></i> Upload Complete!';
         }
@@ -404,12 +404,12 @@ function showDeleteModal(filename) {
     const modal = document.getElementById('deleteModal');
     const fileNameSpan = document.getElementById('deleteFileName');
     const confirmBtn = document.getElementById('confirmDeleteBtn');
-    
+
     if (modal && fileNameSpan && confirmBtn) {
         fileToDelete = filename;
         fileNameSpan.textContent = filename;
         modal.style.display = 'flex';
-        
+
         // Remove any existing event listeners and add new one
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
@@ -427,14 +427,14 @@ function closeDeleteModal() {
 
 async function confirmDelete() {
     if (!fileToDelete) return;
-    
+
     try {
         const response = await fetch(`/api/delete/${encodeURIComponent(fileToDelete)}`, {
             method: 'DELETE'
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             addActivity(`File deleted: ${fileToDelete}`);
             refreshFiles();
@@ -454,16 +454,16 @@ function setupUpload() {
     const fileInput = document.getElementById('fileInput');
     const uploadProgress = document.getElementById('uploadProgress');
     const progressBar = document.getElementById('progressBar');
-    
+
     if (!uploadArea || !fileInput) return;
-    
+
     // Drag and drop functionality
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.style.borderColor = '#ff6b6b';
         uploadArea.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
     });
-    
+
     uploadArea.addEventListener('dragleave', (e) => {
         e.preventDefault();
         if (!uploadArea.contains(e.relatedTarget)) {
@@ -471,19 +471,19 @@ function setupUpload() {
             uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
         }
     });
-    
+
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
         uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
         uploadArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
         handleFiles(e.dataTransfer.files);
     });
-    
+
     // Click to select files
     uploadArea.addEventListener('click', () => {
         fileInput.click();
     });
-    
+
     fileInput.addEventListener('change', (e) => {
         handleFiles(e.target.files);
     });
@@ -492,39 +492,39 @@ function setupUpload() {
 async function handleFiles(files) {
     const uploadProgress = document.getElementById('uploadProgress');
     const progressBar = document.getElementById('progressBar');
-    
+
     if (files.length === 0) return;
-    
+
     // Check if any file is large (> 5MB) to show popup
     const largeFiles = Array.from(files).filter(file => file.size > 5 * 1024 * 1024);
     let uploadModal = null;
-    
+
     if (largeFiles.length > 0) {
         uploadModal = showUploadModal(files.length, largeFiles.length);
     }
-    
+
     // Show progress bar
     if (uploadProgress) {
         uploadProgress.style.display = 'block';
     }
-    
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        
+
         // Update progress
         if (progressBar) {
             const progress = ((i + 1) / files.length) * 100;
             progressBar.style.width = `${progress}%`;
         }
-        
+
         // Update modal progress if exists
         if (uploadModal) {
             updateUploadModalProgress(uploadModal, i + 1, files.length, file.name);
         }
-        
+
         await uploadFile(file);
     }
-    
+
     // Hide progress bar
     if (uploadProgress) {
         setTimeout(() => {
@@ -532,7 +532,7 @@ async function handleFiles(files) {
             if (progressBar) progressBar.style.width = '0%';
         }, 1000);
     }
-    
+
     // Hide upload modal
     if (uploadModal) {
         setTimeout(() => {
@@ -544,31 +544,31 @@ async function handleFiles(files) {
 async function uploadFile(file) {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     // Add folder path if specified
     const folderPathInput = document.getElementById('folderPath');
     if (folderPathInput && folderPathInput.value.trim()) {
         formData.append('folder_path', folderPathInput.value.trim());
     }
-    
+
     try {
         // Show file size info for large files
         const fileSize = (file.size / (1024 * 1024)).toFixed(2);
         const folderInfo = folderPathInput && folderPathInput.value.trim() ? ` to /${folderPathInput.value.trim()}` : '';
-        
+
         if (file.size > 5 * 1024 * 1024) {
             addActivity(`Uploading large file: ${file.name} (${fileSize} MB)${folderInfo}`);
         } else {
             addActivity(`Uploading: ${file.name} (${fileSize} MB)${folderInfo}`);
         }
-        
+
         const response = await fetch('/api/upload', {
             method: 'POST',
             body: formData
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             addActivity(`✅ Upload successful: ${file.name} (${result.size} MB) - Share link: ${result.share_link}`);
         } else {
@@ -584,14 +584,14 @@ async function uploadFile(file) {
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     if (!searchInput) return;
-    
+
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase().trim();
-        
+
         if (searchTerm === '') {
             displayFiles(currentFiles);
         } else {
-            const filteredFiles = currentFiles.filter(file => 
+            const filteredFiles = currentFiles.filter(file =>
                 file.name.toLowerCase().includes(searchTerm)
             );
             displayFiles(filteredFiles);
@@ -609,7 +609,7 @@ function setupModalClose() {
             }
         });
     }
-    
+
     // ESC key to close modal
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -621,31 +621,31 @@ function setupModalClose() {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('File Sharing App initialized');
-    
+
     // Setup file listing page
     if (document.getElementById('filesTableBody')) {
         refreshFiles();
         setupSearch();
         setupModalClose();
     }
-    
+
     // Setup upload page
     if (document.getElementById('uploadArea')) {
         setupUpload();
     }
-    
+
     // Setup stats on home page
     if (document.getElementById('totalFiles')) {
         updateStats();
         // Update stats every 10 seconds
         setInterval(updateStats, 10000);
     }
-    
+
     // Setup chat page
     if (document.getElementById('chatMessages')) {
         setupChat();
     }
-    
+
     // Add welcome message
     addActivity('File sharing application ready');
 });
@@ -666,7 +666,7 @@ function setupChat() {
     const fileInput = document.getElementById('fileInput');
     const fileUploadArea = document.getElementById('fileUploadArea');
     const cancelUploadBtn = document.getElementById('cancelUploadBtn');
-    
+
     // Username setup
     joinChatBtn.addEventListener('click', joinChat);
     usernameInput.addEventListener('keypress', (e) => {
@@ -674,7 +674,7 @@ function setupChat() {
             joinChat();
         }
     });
-    
+
     // Message sending
     sendBtn.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', (e) => {
@@ -682,18 +682,18 @@ function setupChat() {
             sendMessage();
         }
     });
-    
+
     // File upload functionality
     fileBtn.addEventListener('click', () => {
         fileInput.click();
     });
-    
+
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
             uploadChatFile(e.target.files[0]);
         }
     });
-    
+
     // Drag and drop functionality
     const chatMain = document.getElementById('chatMain');
     if (chatMain) {
@@ -701,23 +701,23 @@ function setupChat() {
             e.preventDefault();
             fileUploadArea.style.display = 'block';
         });
-        
+
         chatMain.addEventListener('dragleave', (e) => {
             if (!chatMain.contains(e.relatedTarget)) {
                 fileUploadArea.style.display = 'none';
             }
         });
-        
+
         chatMain.addEventListener('drop', (e) => {
             e.preventDefault();
             fileUploadArea.style.display = 'none';
-            
+
             if (e.dataTransfer.files.length > 0) {
                 uploadChatFile(e.dataTransfer.files[0]);
             }
         });
     }
-    
+
     // Cancel upload
     cancelUploadBtn.addEventListener('click', () => {
         fileUploadArea.style.display = 'none';
@@ -725,22 +725,22 @@ function setupChat() {
             window.currentUpload.abort();
         }
     });
-    
+
     // Typing indicators
     messageInput.addEventListener('input', () => {
         if (currentUsername) {
             socket.emit('user_typing', { username: currentUsername });
-            
+
             // Clear previous timeout
             clearTimeout(typingTimeout);
-            
+
             // Set new timeout to stop typing
             typingTimeout = setTimeout(() => {
                 socket.emit('user_stop_typing', { username: currentUsername });
             }, 1000);
         }
     });
-    
+
     // Emoji picker
     emojiBtn.addEventListener('click', toggleEmojiPicker);
     document.addEventListener('click', (e) => {
@@ -748,7 +748,7 @@ function setupChat() {
             emojiPicker.style.display = 'none';
         }
     });
-    
+
     // Emoji selection
     document.querySelectorAll('.emoji').forEach(emoji => {
         emoji.addEventListener('click', (e) => {
@@ -758,7 +758,7 @@ function setupChat() {
             emojiPicker.style.display = 'none';
         });
     });
-    
+
     // Focus on username input
     usernameInput.focus();
 }
@@ -766,13 +766,13 @@ function setupChat() {
 function joinChat() {
     const usernameInput = document.getElementById('usernameInput');
     const username = usernameInput.value.trim();
-    
+
     if (username && username.length >= 2) {
         currentUsername = username;
         document.getElementById('usernameSetup').style.display = 'none';
         document.getElementById('chatMain').style.display = 'flex';
         document.getElementById('messageInput').focus();
-        
+
         // Add system message
         addSystemMessage(`${username} joined the chat`);
     } else {
@@ -783,15 +783,15 @@ function joinChat() {
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
-    
+
     if (message && currentUsername) {
         socket.emit('chat_message', {
             username: currentUsername,
             message: message
         });
-        
+
         messageInput.value = '';
-        
+
         // Stop typing indicator
         socket.emit('user_stop_typing', { username: currentUsername });
     }
@@ -802,33 +802,33 @@ function uploadChatFile(file) {
         alert('Please join the chat first');
         return;
     }
-    
+
     // Check file size (max 100MB)
     if (file.size > 100 * 1024 * 1024) {
         alert('File size must be less than 100MB');
         return;
     }
-    
+
     const fileUploadArea = document.getElementById('fileUploadArea');
     const uploadProgress = document.getElementById('uploadProgress');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
     const uploadInfo = document.getElementById('uploadInfo');
-    
+
     // Show upload area
     fileUploadArea.style.display = 'block';
     uploadProgress.style.display = 'block';
     uploadInfo.style.display = 'none';
-    
+
     // Create form data
     const formData = new FormData();
     formData.append('file', file);
     formData.append('username', currentUsername);
-    
+
     // Create XMLHttpRequest for progress tracking
     const xhr = new XMLHttpRequest();
     window.currentUpload = xhr;
-    
+
     xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
             const percentComplete = (e.loaded / e.total) * 100;
@@ -836,7 +836,7 @@ function uploadChatFile(file) {
             progressText.textContent = Math.round(percentComplete) + '%';
         }
     });
-    
+
     xhr.addEventListener('load', () => {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
@@ -845,23 +845,23 @@ function uploadChatFile(file) {
             const error = JSON.parse(xhr.responseText);
             alert('Upload failed: ' + error.error);
         }
-        
+
         // Hide upload area
         fileUploadArea.style.display = 'none';
         progressBar.style.width = '0%';
         progressText.textContent = '0%';
         uploadProgress.style.display = 'none';
         uploadInfo.style.display = 'block';
-        
+
         // Reset file input
         document.getElementById('fileInput').value = '';
     });
-    
+
     xhr.addEventListener('error', () => {
         alert('Upload failed due to network error');
         fileUploadArea.style.display = 'none';
     });
-    
+
     xhr.open('POST', '/api/chat/upload');
     xhr.send(formData);
 }
@@ -869,11 +869,11 @@ function uploadChatFile(file) {
 function displayChatHistory(messages) {
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = '';
-    
+
     messages.forEach(message => {
         displayMessage(message, false);
     });
-    
+
     scrollToBottom();
 }
 
@@ -881,24 +881,24 @@ function displayMessage(messageData, scroll = true) {
     const chatMessages = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message';
-    
+
     const isOwnMessage = messageData.username === currentUsername;
     if (isOwnMessage) {
         messageDiv.classList.add('own-message');
     }
-    
+
     // Add message type class
     if (messageData.type) {
         messageDiv.classList.add(`message-${messageData.type}`);
     }
-    
+
     const timestamp = new Date(messageData.timestamp).toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit'
     });
-    
+
     let contentHtml = '';
-    
+
     // Handle different message types
     switch (messageData.type) {
         case 'image':
@@ -910,16 +910,16 @@ function displayMessage(messageData, scroll = true) {
                 <div class="message-content">
                     <div class="file-message">
                         <div class="file-preview">
-                            <img src="/api/download/${messageData.file_data.filename}" 
-                                 alt="${escapeHtml(messageData.file_data.original_name)}" 
+                            <img src="/api/download/${messageData.file_data.filename}"
+                                 alt="${escapeHtml(messageData.file_data.original_name)}"
                                  class="image-preview" />
                         </div>
                         <div class="file-info">
                             <div class="file-name">${escapeHtml(messageData.file_data.original_name)}</div>
                             <div class="file-details">
                                 ${messageData.file_data.size} MB
-                                <a href="/api/download/${messageData.file_data.filename}" 
-                                   download="${messageData.file_data.original_name}" 
+                                <a href="/api/download/${messageData.file_data.filename}"
+                                   download="${messageData.file_data.original_name}"
                                    class="download-link">
                                     <i class="fas fa-download"></i> Download
                                 </a>
@@ -929,11 +929,11 @@ function displayMessage(messageData, scroll = true) {
                 </div>
             `;
             break;
-            
+
         case 'file':
             const fileExtension = messageData.file_data.original_name.split('.').pop().toLowerCase();
             const fileIcon = getFileIcon(fileExtension);
-            
+
             contentHtml = `
                 <div class="message-header">
                     <span class="username">${escapeHtml(messageData.username)}</span>
@@ -948,8 +948,8 @@ function displayMessage(messageData, scroll = true) {
                             <div class="file-name">${escapeHtml(messageData.file_data.original_name)}</div>
                             <div class="file-details">
                                 ${messageData.file_data.size} MB
-                                <a href="/api/download/${messageData.file_data.filename}" 
-                                   download="${messageData.file_data.original_name}" 
+                                <a href="/api/download/${messageData.file_data.filename}"
+                                   download="${messageData.file_data.original_name}"
                                    class="download-link">
                                     <i class="fas fa-download"></i> Download
                                 </a>
@@ -959,7 +959,7 @@ function displayMessage(messageData, scroll = true) {
                 </div>
             `;
             break;
-            
+
         default: // text message
             contentHtml = `
                 <div class="message-header">
@@ -970,10 +970,10 @@ function displayMessage(messageData, scroll = true) {
             `;
             break;
     }
-    
+
     messageDiv.innerHTML = contentHtml;
     chatMessages.appendChild(messageDiv);
-    
+
     if (scroll) {
         scrollToBottom();
     }
@@ -995,7 +995,7 @@ function getFileIcon(extension) {
         'png': 'fas fa-file-image',
         'gif': 'fas fa-file-image'
     };
-    
+
     return iconMap[extension] || 'fas fa-file';
 }
 
@@ -1003,12 +1003,12 @@ function addSystemMessage(message) {
     const chatMessages = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message system-message';
-    
+
     const timestamp = new Date().toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit'
     });
-    
+
     messageDiv.innerHTML = `
         <div class="message-content">
             <i class="fas fa-info-circle"></i>
@@ -1016,14 +1016,14 @@ function addSystemMessage(message) {
             <span class="timestamp">${timestamp}</span>
         </div>
     `;
-    
+
     chatMessages.appendChild(messageDiv);
     scrollToBottom();
 }
 
 function showTypingIndicator(username) {
     if (username === currentUsername) return;
-    
+
     typingUsers.add(username);
     updateTypingIndicator();
 }
@@ -1035,13 +1035,13 @@ function hideTypingIndicator(username) {
 
 function updateTypingIndicator() {
     const typingIndicator = document.getElementById('typingIndicator');
-    
+
     if (typingUsers.size === 0) {
         typingIndicator.style.display = 'none';
     } else {
         const usernames = Array.from(typingUsers);
         let text = '';
-        
+
         if (usernames.length === 1) {
             text = `${usernames[0]} is typing...`;
         } else if (usernames.length === 2) {
@@ -1049,7 +1049,7 @@ function updateTypingIndicator() {
         } else {
             text = `${usernames.length} people are typing...`;
         }
-        
+
         typingIndicator.innerHTML = `
             <div class="typing-dots">
                 <i class="fas fa-ellipsis-h"></i>
@@ -1088,32 +1088,32 @@ function navigateToFolder(folderPath) {
 function updateBreadcrumb(folderPath) {
     const breadcrumb = document.getElementById('breadcrumb');
     if (!breadcrumb) return;
-    
+
     let html = '<a href="#" onclick="navigateToFolder(\'\')"><i class="fas fa-home"></i> Root</a>';
-    
+
     if (folderPath) {
         const parts = folderPath.split('/');
         let currentPath = '';
-        
+
         for (const part of parts) {
             currentPath = currentPath ? `${currentPath}/${part}` : part;
             html += ` <i class="fas fa-chevron-right"></i> `;
             html += `<a href="#" onclick="navigateToFolder('${currentPath}')">${part}</a>`;
         }
     }
-    
+
     breadcrumb.innerHTML = html;
 }
 
 // Create folder function
 async function createFolder() {
     const folderPath = document.getElementById('folderPath').value.trim();
-    
+
     if (!folderPath) {
         alert('Please enter a folder path');
         return;
     }
-    
+
     try {
         const response = await fetch('/api/create-folder', {
             method: 'POST',
@@ -1122,9 +1122,9 @@ async function createFolder() {
             },
             body: JSON.stringify({ folder_path: folderPath })
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             addActivity(`Folder created: ${folderPath}`);
             document.getElementById('folderPath').value = folderPath; // Keep the path for uploads
@@ -1142,9 +1142,9 @@ async function createFolder() {
 function displayFiles(items) {
     const tbody = document.getElementById('filesTableBody');
     const noFiles = document.getElementById('noFiles');
-    
+
     if (!tbody) return;
-    
+
     // Filter items based on current folder
     let displayItems = items;
     if (Array.isArray(items)) {
@@ -1170,28 +1170,28 @@ function displayFiles(items) {
         }
         displayItems = currentItems;
     }
-    
+
     if (displayItems.length === 0) {
         tbody.innerHTML = '';
         if (noFiles) noFiles.style.display = 'block';
         return;
     }
-    
+
     if (noFiles) noFiles.style.display = 'none';
-    
+
     // Sort items: folders first, then files
     displayItems.sort((a, b) => {
         if (a.type === 'folder' && b.type === 'file') return -1;
         if (a.type === 'file' && b.type === 'folder') return 1;
         return a.name.localeCompare(b.name);
     });
-    
+
     tbody.innerHTML = displayItems.map(item => {
         if (item.type === 'folder') {
             return `
                 <tr class="folder-row">
                     <td>
-                        <i class="fas fa-folder"></i> 
+                        <i class="fas fa-folder"></i>
                         <a href="#" onclick="navigateToFolder('${item.path}')" class="folder-link">
                             ${item.name}
                         </a>
@@ -1213,7 +1213,7 @@ function displayFiles(items) {
             return `
                 <tr class="file-row">
                     <td>
-                        <i class="fas fa-file"></i> 
+                        <i class="fas fa-file"></i>
                         <span title="${item.name}">${item.name.length > 30 ? item.name.substring(0, 30) + '...' : item.name}</span>
                     </td>
                     <td>File</td>
@@ -1241,25 +1241,25 @@ function displayFiles(items) {
 function showShareLinkModal(filePath) {
     const fileName = filePath.split('/').pop();
     shareFileInfo = { path: filePath, name: fileName };
-    
+
     const modal = document.getElementById('shareLinkModal');
     const fileNameSpan = document.getElementById('shareFileName');
     const shareResult = document.getElementById('shareResult');
     const thumbnailBtn = document.getElementById('thumbnailShareBtn');
-    
+
     fileNameSpan.textContent = fileName;
     shareResult.style.display = 'none';
-    
+
     // Show thumbnail button only for images
     const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(fileName);
     if (thumbnailBtn) {
         thumbnailBtn.style.display = isImage ? 'block' : 'none';
     }
-    
+
     // Reset form values
     document.getElementById('expiryDays').value = 7;
     document.getElementById('maxDownloads').value = '';
-    
+
     modal.style.display = 'block';
 }
 
@@ -1271,18 +1271,18 @@ function closeShareLinkModal() {
 
 async function generateShareLinkType(linkType) {
     if (!shareFileInfo) return;
-    
+
     const expiryDays = parseInt(document.getElementById('expiryDays').value) || 7;
     const maxDownloads = document.getElementById('maxDownloads').value;
-    
+
     const payload = {
         expires_in_days: expiryDays
     };
-    
+
     if (maxDownloads) {
         payload.max_downloads = parseInt(maxDownloads);
     }
-    
+
     try {
         const response = await fetch(`/api/generate-share-link/${encodeURIComponent(shareFileInfo.path)}`, {
             method: 'POST',
@@ -1291,14 +1291,14 @@ async function generateShareLinkType(linkType) {
             },
             body: JSON.stringify(payload)
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             const token = result.share_link.split('/').pop();
             let shareUrl = '';
             let linkTypeLabel = '';
-            
+
             // Generate appropriate URL based on link type
             switch(linkType) {
                 case 'preview':
@@ -1322,12 +1322,12 @@ async function generateShareLinkType(linkType) {
                     shareUrl = result.share_link;
                     linkTypeLabel = 'Share Link';
             }
-            
+
             document.getElementById('shareLink').value = shareUrl;
             document.getElementById('shareTypeLabel').textContent = linkTypeLabel;
             document.getElementById('expiryDate').textContent = new Date(result.expires_at).toLocaleString();
             document.getElementById('shareResult').style.display = 'block';
-            
+
             addActivity(`${linkTypeLabel} generated for: ${shareFileInfo.name}`);
         } else {
             alert('Error: ' + result.error);
@@ -1375,7 +1375,7 @@ async function downloadFile(filePath) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         addActivity(`Download started: ${filePath.split('/').pop()}`);
     } catch (error) {
         console.error('Error downloading file:', error);
@@ -1388,11 +1388,11 @@ function showDeleteModal(filePath, fileName) {
     const modal = document.getElementById('deleteModal');
     const fileNameSpan = document.getElementById('deleteFileName');
     const confirmBtn = document.getElementById('confirmDeleteBtn');
-    
+
     fileNameSpan.textContent = fileName;
-    
+
     confirmBtn.onclick = () => deleteFile(filePath, fileName);
-    
+
     modal.style.display = 'block';
 }
 
@@ -1401,9 +1401,9 @@ async function deleteFile(filePath, fileName) {
         const response = await fetch(`/api/delete/${encodeURIComponent(filePath)}`, {
             method: 'DELETE'
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             addActivity(`File deleted: ${fileName}`);
             closeDeleteModal();
@@ -1426,7 +1426,7 @@ window.onclick = function(event) {
     const shareModal = document.getElementById('shareLinkModal');
     const deleteModal = document.getElementById('deleteModal');
     const urlModal = document.getElementById('urlModal');
-    
+
     if (event.target === shareModal) {
         closeShareLinkModal();
     }
@@ -1445,15 +1445,15 @@ async function showUrlModal(filePath, fileData) {
     try {
         // Store current file data
         currentFileData = typeof fileData === 'string' ? JSON.parse(fileData) : fileData;
-        
+
         const modal = document.getElementById('urlModal');
         const fileName = document.getElementById('urlFileName');
         const fileInfo = document.getElementById('urlFileInfo');
-        
+
         // Update file info
         fileName.textContent = currentFileData.name || currentFileData.filename || filePath.split('/').pop();
         fileInfo.textContent = `Size: ${currentFileData.size} MB | Type: ${currentFileData.mime_type || 'Unknown'}`;
-        
+
         // Generate or get share link for this file
         let shareToken = null;
         try {
@@ -1464,7 +1464,7 @@ async function showUrlModal(filePath, fileData) {
                 },
                 body: JSON.stringify({})
             });
-            
+
             if (shareResponse.ok) {
                 const shareData = await shareResponse.json();
                 shareToken = shareData.share_link.split('/').pop(); // Extract token from URL
@@ -1472,14 +1472,14 @@ async function showUrlModal(filePath, fileData) {
         } catch (error) {
             console.log('Could not generate share link:', error);
         }
-        
+
         if (shareToken) {
             // Populate URL fields
             const baseUrl = window.location.origin;
             document.getElementById('previewUrl').value = `${baseUrl}/preview/${shareToken}`;
             document.getElementById('directUrl').value = `${baseUrl}/file/${shareToken}`;
             document.getElementById('downloadUrl').value = `${baseUrl}/share/${shareToken}`;
-            
+
             // Show thumbnail section only for images
             const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(fileName.textContent);
             const thumbnailSection = document.getElementById('thumbnailSection');
@@ -1492,7 +1492,7 @@ async function showUrlModal(filePath, fileData) {
                 thumbnailSection.style.display = 'none';
             }
         }
-        
+
         modal.style.display = 'block';
     } catch (error) {
         console.error('Error showing URL modal:', error);
@@ -1510,7 +1510,7 @@ function copyUrl(inputId) {
     if (input && input.value) {
         input.select();
         input.setSelectionRange(0, 99999); // For mobile devices
-        
+
         try {
             document.execCommand('copy');
             showCopyFeedback('URL copied to clipboard!');
@@ -1543,15 +1543,15 @@ function copyAllUrls() {
         document.getElementById('directUrl').value,
         document.getElementById('downloadUrl').value
     ];
-    
+
     // Add thumbnail URL if visible
     const thumbnailSection = document.getElementById('thumbnailSection');
     if (thumbnailSection && thumbnailSection.style.display !== 'none') {
         urls.push(document.getElementById('thumbnailUrl').value);
     }
-    
+
     const allUrls = urls.filter(url => url).join('\n');
-    
+
     if (navigator.clipboard) {
         navigator.clipboard.writeText(allUrls).then(() => {
             showCopyFeedback('All URLs copied to clipboard!');
@@ -1577,7 +1577,7 @@ function copyAllUrls() {
 
 async function generateNewShareLink() {
     if (!currentFileData) return;
-    
+
     try {
         const filePath = currentFileData.path || currentFileData.name || currentFileData.filename;
         const response = await fetch(`/api/generate-share-link/${encodeURIComponent(filePath)}`, {
@@ -1587,17 +1587,17 @@ async function generateNewShareLink() {
             },
             body: JSON.stringify({ expires_in_days: 7 })
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             const shareToken = data.share_link.split('/').pop();
-            
+
             // Update all URL fields with new token
             const baseUrl = window.location.origin;
             document.getElementById('previewUrl').value = `${baseUrl}/preview/${shareToken}`;
             document.getElementById('directUrl').value = `${baseUrl}/file/${shareToken}`;
             document.getElementById('downloadUrl').value = `${baseUrl}/share/${shareToken}`;
-            
+
             showCopyFeedback('New share links generated!');
         } else {
             const error = await response.json();
@@ -1615,23 +1615,23 @@ function showCopyFeedback(message, type = 'success') {
     if (existing) {
         existing.remove();
     }
-    
+
     // Create feedback element
     const feedback = document.createElement('div');
     feedback.className = 'copy-feedback';
     feedback.textContent = message;
-    
+
     if (type === 'error') {
         feedback.style.background = '#f44336';
     }
-    
+
     document.body.appendChild(feedback);
-    
+
     // Show feedback
     setTimeout(() => {
         feedback.classList.add('show');
     }, 10);
-    
+
     // Hide and remove feedback
     setTimeout(() => {
         feedback.classList.remove('show');
@@ -1664,12 +1664,12 @@ window.hideTypingIndicator = hideTypingIndicator;
 async function createFolder() {
     const folderPathInput = document.getElementById('folderPath');
     const folderPath = folderPathInput ? folderPathInput.value.trim() : '';
-    
+
     if (!folderPath) {
         alert('Please enter a folder path');
         return;
     }
-    
+
     try {
         const response = await fetch('/api/create-folder', {
             method: 'POST',
@@ -1678,9 +1678,9 @@ async function createFolder() {
             },
             body: JSON.stringify({ folder_path: folderPath })
         });
-        
+
         const result = await response.json();
-        
+
         if (response.ok) {
             showCopyFeedback(`Folder created: ${folderPath}`);
             refreshFiles();
@@ -1698,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize folder navigation
     currentFolder = '';
     updateBreadcrumb('');
-    
+
     // Load files
     refreshFiles();
     updateStats();

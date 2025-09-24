@@ -36,16 +36,16 @@ class FileShareService
      * @throws \Exception
      */
     public function uploadFile(
-        UploadedFile $file, 
-        string $folderPath = '', 
+        UploadedFile $file,
+        string $folderPath = '',
         bool $generatePreview = true
     ): array {
         try {
             $response = Http::timeout($this->timeout)
                 ->withHeaders(['X-API-Key' => $this->apiKey])
                 ->attach(
-                    'file', 
-                    file_get_contents($file->getPathname()), 
+                    'file',
+                    file_get_contents($file->getPathname()),
                     $file->getClientOriginalName()
                 )
                 ->post($this->baseUrl . '/api/v1/upload', [

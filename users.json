@@ -1,0 +1,9 @@
+{
+  "admin": {
+    "username": "admin",
+    "password_hash": "pbkdf2:sha256:600000$vwhFw7Ui0q5nFyFP$8daa1f1efb9982018cd7c9299b64a943b13790c473d7e6b1f909528cead5a006",
+    "role": "admin",
+    "created_at": "2025-09-24T19:51:22.964266",
+    "last_login": "2025-09-24T19:54:08.661789"
+  }
+}

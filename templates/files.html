@@ -9,14 +9,14 @@
             <input type="text" id="searchInput" placeholder="Search files and folders...">
         </div>
     </div>
-    
+
     <!-- Breadcrumb Navigation -->
     <div class="breadcrumb-container">
         <nav class="breadcrumb" id="breadcrumb">
             <a href="#" onclick="navigateToFolder('')"><i class="fas fa-home"></i> Root</a>
         </nav>
     </div>
-    
+
     <div class="files-stats">
         <div class="stat-item">
             <i class="fas fa-file"></i>
@@ -31,7 +31,7 @@
             <span id="totalSizeDisplay">0 MB</span> Total
         </div>
     </div>
-    
+
     <div class="files-table-container">
         <table class="files-table">
             <thead>
@@ -41,7 +41,7 @@
                     <th><i class="fas fa-weight"></i> Size</th>
                     <th><i class="fas fa-calendar"></i> Upload Date</th>
                     <th><i class="fas fa-download"></i> Downloads</th>
-                    <th><i class="fas fa-link"></i> URLs</th>
+                    <!-- <th><i class="fas fa-link"></i> URLs</th> -->
                     <th><i class="fas fa-cogs"></i> Actions</th>
                 </tr>
             </thead>
@@ -49,7 +49,7 @@
                 <!-- Files will be loaded here -->
             </tbody>
         </table>
-        
+
         <div id="noFiles" class="no-files" style="display: none;">
             <i class="fas fa-folder-open"></i>
             <h3>No files found</h3>
@@ -59,7 +59,7 @@
             </a>
         </div>
     </div>
-    
+
     <div class="file-actions">
         <button class="btn btn-secondary" onclick="refreshFiles()">
             <i class="fas fa-sync-alt"></i> Refresh
@@ -82,7 +82,7 @@
                 <h4 id="urlFileName">filename.jpg</h4>
                 <p id="urlFileInfo">Size: 2.5 MB | Type: image/jpeg</p>
             </div>
-            
+
             <div class="url-section">
                 <h5><i class="fas fa-eye"></i> Preview URL</h5>
                 <p class="url-description">View file directly in browser (for images, PDFs, etc.)</p>
@@ -166,7 +166,7 @@
                 <h4 id="shareFileName">filename.jpg</h4>
                 <p id="shareFileInfo">Click a share type to generate a link</p>
             </div>
-            
+
             <div class="share-options">
                 <div class="option-group">
                     <label>Expires in (days):</label>
@@ -203,7 +203,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <div id="shareResult" class="share-result" style="display: none;">
                 <div class="share-result-header">
                     <i class="fas fa-check-circle"></i>

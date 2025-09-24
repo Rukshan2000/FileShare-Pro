@@ -374,7 +374,7 @@ return new class extends Migration
             $table->string('thumbnail_url')->nullable();
             $table->timestamp('upload_date');
             $table->timestamps();
-            
+
             $table->index(['folder_path', 'created_at']);
             $table->index('share_token');
         });

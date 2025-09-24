@@ -1,10 +1,23 @@
-# FileShare Pro 🚀
+# 📁 FileShare Pro
 
-A modern, professional file sharing web application built with Flask and Socket.IO. Features real-time updates, secure file handling, group chat functionality, **shareable links with multiple URL types**, **custom folder organization**, **S3/Minio-like media server capabilities**, **programmatic API access**, and a beautiful responsive interface.
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.8+-brightgreen.svg)
+![Flask](https://img.shields.io/badge/Flask-2.3.3-red.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows%20|%20Linux%20|%20macOS-lightgrey.svg)
+
+A modern, secure, and feature-rich file sharing application built with Flask and Socket.IO. Features real-time updates, **user authentication**, secure file handling, group chat functionality, **shareable links with multiple URL types**, **custom folder organization**, **S3/Minio-like media server capabilities**, **programmatic API access**, and a beautiful responsive interface.
 
 ## ✨ Features
 
-### 📁 Advanced File Management
+### � Security & Authentication
+- **User Authentication**: Secure login system with username/password
+- **Session Management**: Flask-Login integration with remember me functionality
+- **Password Management**: Change password functionality
+- **Protected Routes**: All application routes require authentication
+- **API Key Authentication**: Programmatic access with API keys
+- **Default Admin Account**: Ready-to-use admin account (change password after first login!)
+
+### �📁 Advanced File Management
 - **Custom Folder Structure**: Create and organize files in custom folder hierarchies
 - **Secure File Upload**: Support for multiple file types (images, documents, archives)
 - **Real-time File Updates**: Instant notifications when files are uploaded/downloaded
@@ -13,7 +26,7 @@ A modern, professional file sharing web application built with Flask and Socket.
 - **Auto Cleanup**: Automatic deletion of files older than 7 days
 - **File Size Limit**: 100MB maximum file size for optimal performance
 - **Breadcrumb Navigation**: Easy navigation through folder structures with proper folder context
-- **Increased Table Width**: Enhanced file browser with wider table layout for better viewing
+- **Enhanced File Browser**: Wider table layout for better viewing experience
 
 ### 🔗 Advanced Shareable Links System
 - **4 Types of Share Links**: Generate different URL formats for various use cases:
@@ -107,6 +120,10 @@ A modern, professional file sharing web application built with Flask and Socket.
 
 5. **Access the application**
    - Open your browser and navigate to `http://localhost:8000`
+   - **Default Login Credentials**:
+     - Username: `admin`
+     - Password: `admin`
+   - **⚠️ Important**: Change the default password after first login!
    - The application will be running on all network interfaces (0.0.0.0)
 
 ## 🎯 Usage
@@ -284,7 +301,7 @@ The application uses Socket.IO to provide real-time updates:
 A background thread automatically removes:
 - Files older than 7 days to manage disk space efficiently
 - Expired share links to maintain security (all URL types)
-- Orphaned metadata entries and broken file references  
+- Orphaned metadata entries and broken file references
 - Unused thumbnails from deleted images
 - Expired API keys and inactive sessions
 
@@ -325,7 +342,7 @@ $result = $fileShare->uploadFile($file, 'my-folder/subfolder');
 
 // Get all URL types
 echo $result['urls']['direct'];     // S3-like direct URL
-echo $result['urls']['preview'];    // Browser preview URL  
+echo $result['urls']['preview'];    // Browser preview URL
 echo $result['urls']['download'];   // Force download URL
 echo $result['urls']['thumbnail'];  // Thumbnail URL (images only)
 ```
@@ -348,7 +365,7 @@ curl -X POST http://localhost:8000/api/v1/upload \
   "success": true,
   "urls": {
     "preview": "/preview/abc123token",
-    "direct": "/file/abc123token", 
+    "direct": "/file/abc123token",
     "download": "/share/abc123token",
     "thumbnail": "/thumbnail/image.jpg?token=abc123token"
   }
@@ -425,7 +442,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 **✨ Latest Features:**
 - **4 Share Link Types**: Preview, Direct, Download, and Thumbnail URLs
-- **S3/Minio-like Media Server**: Direct file access with CDN-like URLs  
+- **S3/Minio-like Media Server**: Direct file access with CDN-like URLs
 - **Programmatic API**: Full Laravel/PHP integration with examples
 - **Enhanced Folder Navigation**: Context-aware file browsing
 - **Auto Thumbnail Generation**: 300x300px thumbnails for all images
